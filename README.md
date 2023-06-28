@@ -30,7 +30,7 @@ Enable Cloudflare Workers runtime for local development.
 
 | Function  | Status |
 | --------- | ------ |
-| `first()` | ❌     |
+| `first()` | ✅     |
 | `run()`   | ✅     |
 | `all()`   | ❌     |
 | `raw()`   | ❌     |
