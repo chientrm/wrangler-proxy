@@ -1,4 +1,10 @@
-import { Data, RunPreparedStatement } from './data';
+import {
+  Data,
+  ErrorResult,
+  Result,
+  RunPreparedStatement,
+  SuccessResult,
+} from './data';
 
 class Proxy {
   host: string;
@@ -9,11 +15,19 @@ class Proxy {
   }
   async post<T>(data: Data) {
     const res = await fetch(this.host, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return await res.json<T>();
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }),
+      result = await res.json<Result>();
+    if (result.status === 200) {
+      return (result as SuccessResult<T>).data;
+    } else if (result.status === 500) {
+      const error = (result as ErrorResult).error;
+      throw new Error(error.message);
+    } else {
+      throw new Error('Invalid response status code');
+    }
   }
 }
 
