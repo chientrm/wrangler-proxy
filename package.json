@@ -1,5 +1,6 @@
 {
   "name": "cf-workers-proxy",
+  "description": "Enable Cloudflare Workers runtime for local development",
   "version": "0.0.1",
   "main": "index.ts",
   "scripts": {
@@ -13,5 +14,16 @@
     "itty-router-extras": "^0.4.5",
     "typescript": "^5.1.3",
     "wrangler": "^3.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chientrm/cf-workers-proxy.git"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "proxy",
+    "local",
+    "development"
+  ]
 }
