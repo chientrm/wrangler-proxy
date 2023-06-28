@@ -24,7 +24,7 @@ Enable Cloudflare Workers runtime for local development.
 | `prepare()` | ✅     |
 | `batch()`   | ❌     |
 | `dump()`    | ❌     |
-| `exec()`    | ❌     |
+| `exec()`    | ✅     |
 
 ### D1PreparedStatement
 

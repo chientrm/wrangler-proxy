@@ -12,8 +12,15 @@ interface ErrorResult extends Result {
   error: Error;
 }
 
+enum ProxyType {
+  D1DatabasePreparedStatementRun,
+  D1DatabaseExec,
+}
+
 interface Data {
-  action: 'runPreparedStatement';
+  proxyType: ProxyType;
+  host?: string;
+  name: string;
 }
 
 interface RunPreparedStatement extends Data {
@@ -23,4 +30,5 @@ interface RunPreparedStatement extends Data {
   values: any[] | undefined;
 }
 
+export { ProxyType };
 export type { Data, ErrorResult, Result, RunPreparedStatement, SuccessResult };

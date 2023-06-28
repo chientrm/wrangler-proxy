@@ -1,10 +1,6 @@
-import { D1DatabaseProxy } from './d1';
-import type {
-  Data,
-  ErrorResult,
-  RunPreparedStatement,
-  SuccessResult,
-} from './data';
+import type { Data, ErrorResult, SuccessResult } from './data';
+import { ProxyFactory } from './factory';
+import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
 
 const json = <T>(data: T) => {
     const result: SuccessResult<T> = { status: 200, data },
@@ -29,16 +25,10 @@ const json = <T>(data: T) => {
       ): Promise<Response> {
         if (request.method === 'POST') {
           try {
-            const data = await request.json<Data>();
-            if (data.action === 'runPreparedStatement') {
-              const { name, query, values } = data as RunPreparedStatement,
-                d1 = env[name] as D1Database,
-                d1Result = await d1
-                  .prepare(query)
-                  .bind(...values!)
-                  .run();
-              return json(d1Result);
-            }
+            const data = await request.json<Data>(),
+              proxy = ProxyFactory.getProxy(data),
+              result = await proxy.execute(env);
+            return json(result);
           } catch (e: any) {
             if (e instanceof Error) {
               return error({
@@ -52,7 +42,7 @@ const json = <T>(data: T) => {
         return new Response(null, { status: 400 });
       },
     },
-  createD1 = ({ host, name }: { host: string; name: string }): D1Database =>
-    new D1DatabaseProxy({ host, name });
+  createD1 = ({ host, name }: { host?: string; name: string }): D1Database =>
+    new D1DatabaseProxyHolder({ host: host ?? 'http://localhost:8787', name });
 
 export { createD1, createWorker };
