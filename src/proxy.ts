@@ -1,0 +1,3 @@
+interface Proxy {
+  host: string;
+}
