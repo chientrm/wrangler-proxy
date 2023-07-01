@@ -15,6 +15,7 @@ interface ErrorResult extends Result {
 enum ProxyType {
   D1DatabasePreparedStatementRun,
   D1DatabasePreparedStatementFirst,
+  D1DatabasePreparedStatementAll,
   D1DatabaseExec,
 }
 
