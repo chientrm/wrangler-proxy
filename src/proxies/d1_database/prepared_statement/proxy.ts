@@ -1,5 +1,6 @@
 import { ProxyType } from '../../../data';
 import { ProxyHolder } from '../../proxy';
+import { D1DatabasePreparedStatementAllProxy } from './all/proxy';
 import { D1DatabasePreparedStatementFirstProxy } from './first/proxy';
 import { D1DatabasePreparedStatementRunProxy } from './run/proxy';
 
@@ -32,7 +33,7 @@ class D1DatabasePreparedStatementProxy
   async first<T = unknown>(colName?: string | undefined): Promise<T> {
     const { host, name, query, values } = this,
       proxy = new D1DatabasePreparedStatementFirstProxy({
-        proxyType: ProxyType.D1DatabasePreparedStatementRun,
+        proxyType: ProxyType.D1DatabasePreparedStatementFirst,
         host,
         name,
         query,
@@ -54,8 +55,17 @@ class D1DatabasePreparedStatementProxy
       result = await proxy.post<D1Result<T>>();
     return result;
   }
-  all<T = unknown>(): Promise<D1Result<T>> {
-    throw new Error('Method not implemented.');
+  async all<T = unknown>(): Promise<D1Result<T>> {
+    const { host, name, query, values } = this,
+      proxy = new D1DatabasePreparedStatementAllProxy({
+        proxyType: ProxyType.D1DatabasePreparedStatementAll,
+        host,
+        name,
+        query,
+        values,
+      }),
+      result = await proxy.post<D1Result<T>>();
+    return result;
   }
   raw<T = unknown>(): Promise<T[]> {
     throw new Error('Method not implemented.');
