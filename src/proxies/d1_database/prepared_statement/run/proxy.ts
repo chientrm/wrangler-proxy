@@ -1,37 +1,32 @@
-import { Data, ProxyType } from '../../../../data';
 import { Proxy } from '../../../proxy';
 
-interface ProxyData extends Data {
+interface Payload {
   query: string;
   values?: any[];
 }
 
-class D1DatabasePreparedStatementRunProxy extends Proxy<ProxyData> {
-  query: string;
-  values?: any[];
-  constructor(data: ProxyData) {
-    super(data);
-    this.query = data.query;
-    this.values = data.values;
+class D1DatabasePreparedStatementRunProxy extends Proxy<Payload> {
+  static readonly proxyType = 'D1DatabasePreparedStatementRunProxy';
+  constructor({
+    host,
+    name,
+    payload,
+  }: {
+    host?: string;
+    name: string;
+    payload: Payload;
+  }) {
+    const proxyType = D1DatabasePreparedStatementRunProxy.proxyType;
+    super({ proxyType, host, name, payload });
   }
   async execute(env: any) {
     const d1 = env[this.name] as D1Database,
-      statement = d1.prepare(this.query).bind(...(this.values ?? [])),
-      result = await statement.run();
+      { query, values } = this.payload!,
+      result = await d1
+        .prepare(query)
+        .bind(...(values ?? []))
+        .run();
     return result;
-  }
-  getData(): ProxyData {
-    const { host, name, query, values } = this;
-    return {
-      proxyType: ProxyType.D1DatabasePreparedStatementRun,
-      host,
-      name,
-      query,
-      values,
-    };
-  }
-  static create(data: Data) {
-    return new D1DatabasePreparedStatementRunProxy(data as ProxyData);
   }
 }
 

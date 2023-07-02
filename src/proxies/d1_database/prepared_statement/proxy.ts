@@ -1,71 +1,44 @@
-import { ProxyType } from '../../../data';
 import { ProxyHolder } from '../../proxy';
 import { D1DatabasePreparedStatementAllProxy } from './all/proxy';
 import { D1DatabasePreparedStatementFirstProxy } from './first/proxy';
 import { D1DatabasePreparedStatementRunProxy } from './run/proxy';
 
+interface Payload {
+  query: string;
+  values?: any[];
+}
+
 class D1DatabasePreparedStatementProxy
-  extends ProxyHolder
+  extends ProxyHolder<Payload>
   implements D1PreparedStatement
 {
-  values?: any[];
-  query: string;
-
-  constructor({
-    host,
-    name,
-    query,
-    values,
-  }: {
-    host?: string;
-    name: string;
-    query: string;
-    values?: any[];
-  }) {
-    super({ host, name });
-    this.query = query;
-    this.values = values;
-  }
   bind(...values: any[]): D1DatabasePreparedStatementProxy {
-    const { host, name, query } = this;
-    return new D1DatabasePreparedStatementProxy({ host, name, query, values });
+    const { host, name } = this,
+      { query } = this.payload!,
+      payload = { query, values };
+    return new D1DatabasePreparedStatementProxy({ host, name, payload });
   }
   async first<T = unknown>(colName?: string | undefined): Promise<T> {
-    const { host, name, query, values } = this,
+    const { host, name } = this,
+      { query, values } = this.payload,
       proxy = new D1DatabasePreparedStatementFirstProxy({
-        proxyType: ProxyType.D1DatabasePreparedStatementFirst,
         host,
         name,
-        query,
-        values,
-        colName,
-      }),
-      result = await proxy.post<T>();
-    return result;
+        payload: { query, values, colName },
+      });
+    return proxy.post<T>();
   }
   async run<T = unknown>(): Promise<D1Result<T>> {
-    const { host, name, query, values } = this,
-      proxy = new D1DatabasePreparedStatementRunProxy({
-        proxyType: ProxyType.D1DatabasePreparedStatementRun,
-        host,
-        name,
-        query,
-        values,
-      }),
-      result = await proxy.post<D1Result<T>>();
-    return result;
+    const { host, name } = this,
+      payload = this.payload,
+      proxy = new D1DatabasePreparedStatementRunProxy({ host, name, payload });
+    return proxy.post<D1Result<T>>();
   }
   async all<T = unknown>(): Promise<D1Result<T>> {
-    const { host, name, query, values } = this,
-      proxy = new D1DatabasePreparedStatementAllProxy({
-        proxyType: ProxyType.D1DatabasePreparedStatementAll,
-        host,
-        name,
-        query,
-        values,
-      }),
-      result = await proxy.post<D1Result<T>>();
-    return result;
+    const { host, name } = this,
+      payload = this.payload,
+      proxy = new D1DatabasePreparedStatementAllProxy({ host, name, payload });
+    return proxy.post<D1Result<T>>();
   }
   raw<T = unknown>(): Promise<T[]> {
     throw new Error('Method not implemented.');

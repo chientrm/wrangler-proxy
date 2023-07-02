@@ -1,4 +1,4 @@
-import type { Data, ErrorResult, SuccessResult } from './data';
+import type { ErrorResult, PostData, SuccessResult } from './data';
 import { ProxyFactory } from './factory';
 import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
 
@@ -25,7 +25,7 @@ const json = <T>(data: T) => {
       ): Promise<Response> {
         if (request.method === 'POST') {
           try {
-            const data = await request.json<Data>(),
+            const data = await request.json<PostData>(),
               proxy = ProxyFactory.getProxy(data),
               result = await proxy.execute(env);
             return json(result);
@@ -42,7 +42,11 @@ const json = <T>(data: T) => {
         return new Response(null, { status: 400 });
       },
     },
-  createD1 = ({ host, name }: { host?: string; name: string }): D1Database =>
-    new D1DatabaseProxyHolder({ host: host ?? 'http://localhost:8787', name });
+  createD1 = (name: string, options?: { hostname?: string }): D1Database =>
+    new D1DatabaseProxyHolder({
+      host: options?.hostname ?? 'http://localhost:8787',
+      name,
+      payload: {},
+    });
 
 export { createD1, createWorker };

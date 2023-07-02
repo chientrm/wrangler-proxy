@@ -1,39 +1,28 @@
-import { Data, ProxyType } from '../../../data';
 import { Proxy } from '../../proxy';
 
-interface ProxyData extends Data {
+interface Payload {
   query: string;
 }
 
-class D1DatabaseExecProxy extends Proxy<ProxyData> {
-  static create(data: Data) {
-    return new D1DatabaseExecProxy(data as ProxyData);
-  }
-  getData(): ProxyData {
-    const { host, name, query } = this;
-    return {
-      proxyType: ProxyType.D1DatabaseExec,
-      host,
-      name,
-      query,
-    };
-  }
-  query: string;
+class D1DatabaseExecProxy extends Proxy<Payload> {
+  static readonly proxyType = 'D1DatabaseExecProxy';
   constructor({
     host,
     name,
-    query,
+    payload,
   }: {
     host?: string;
     name: string;
-    query: string;
+    payload: Payload;
   }) {
-    super({ host, name });
-    this.query = query;
+    const proxyType = D1DatabaseExecProxy.proxyType;
+    super({ proxyType, host, name, payload });
   }
   execute(env: any) {
-    const d1 = env[this.name] as D1Database;
-    return d1.exec(this.query);
+    const { name } = this,
+      { query } = this.payload,
+      d1 = env[name] as D1Database;
+    return d1.exec(query);
   }
 }
 

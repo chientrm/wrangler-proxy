@@ -1,39 +1,32 @@
-import { Data, ProxyType } from '../../../../data';
 import { Proxy } from '../../../proxy';
 
-interface ProxyData extends Data {
+interface Payload {
   query: string;
   values?: any[];
-  colName?: string;
 }
 
-class D1DatabasePreparedStatementAllProxy extends Proxy<ProxyData> {
-  query: string;
-  values?: any[];
-  constructor(data: ProxyData) {
-    super(data);
-    const { query, values } = data;
-    this.query = query;
-    this.values = values;
-  }
-  getData(): ProxyData {
-    const { host, name, query, values } = this;
-    return {
-      proxyType: ProxyType.D1DatabasePreparedStatementFirst,
-      host,
-      name,
-      query,
-      values,
-    };
+class D1DatabasePreparedStatementAllProxy extends Proxy<Payload> {
+  static readonly proxyType = 'D1DatabasePreparedStatementAllProxy';
+  constructor({
+    host,
+    name,
+    payload,
+  }: {
+    host?: string;
+    name: string;
+    payload: Payload;
+  }) {
+    const proxyType = D1DatabasePreparedStatementAllProxy.proxyType;
+    super({ proxyType, host, name, payload });
   }
   async execute(env: any): Promise<any> {
     const d1 = env[this.name] as D1Database,
-      statement = d1.prepare(this.query).bind(...(this.values ?? [])),
-      result = await statement.all();
+      { query, values } = this.payload!,
+      result = await d1
+        .prepare(query)
+        .bind(...(values ?? []))
+        .all();
     return result;
-  }
-  static create(data: Data) {
-    return new D1DatabasePreparedStatementAllProxy(data as ProxyData);
   }
 }
 
