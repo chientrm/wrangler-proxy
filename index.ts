@@ -1,3 +1,3 @@
-import { createD1, createWorker } from './src/worker';
+import { createD1, createWorker, sendEmail } from './src/worker';
 
-export { createD1, createWorker };
+export { createD1, createWorker, sendEmail };

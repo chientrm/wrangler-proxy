@@ -5,6 +5,7 @@ require('esbuild').build({
   outdir: 'dist',
   bundle: true,
   format: 'esm',
+  external: ['cloudflare:email'],
   plugins: [
     {
       name: 'on-end',

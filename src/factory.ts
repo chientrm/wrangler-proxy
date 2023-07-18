@@ -3,6 +3,7 @@ import { D1DatabaseExecProxy } from './proxies/d1_database/exec/proxy';
 import { D1DatabasePreparedStatementAllProxy } from './proxies/d1_database/prepared_statement/all/proxy';
 import { D1DatabasePreparedStatementFirstProxy } from './proxies/d1_database/prepared_statement/first/proxy';
 import { D1DatabasePreparedStatementRunProxy } from './proxies/d1_database/prepared_statement/run/proxy';
+import { SendEmailProxy } from './proxies/send_email/proxy';
 
 class ProxyFactory {
   public static getProxy(postData: PostData) {
@@ -16,6 +17,8 @@ class ProxyFactory {
         return new D1DatabasePreparedStatementRunProxy({ name, payload });
       case D1DatabaseExecProxy.proxyType:
         return new D1DatabaseExecProxy({ name, payload });
+      case SendEmailProxy.proxyType:
+        return new SendEmailProxy({ name, payload });
       default:
         throw new Error('Unknown proxy type.');
     }
