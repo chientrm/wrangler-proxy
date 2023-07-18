@@ -2,6 +2,7 @@ import { createMimeMessage } from 'mimetext';
 import type { ErrorResult, PostData, SuccessResult } from './data';
 import { ProxyFactory } from './factory';
 import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
+import { FetcherProxyHolder } from './proxies/fetcher/proxy_holder';
 import { SendEmailProxy } from './proxies/send_email/proxy';
 
 const json = <T>(data: T) => {
@@ -78,11 +79,7 @@ const json = <T>(data: T) => {
       msg.setSubject(subject);
       msg.addMessage({ contentType, data });
       const { EmailMessage } = await import('cloudflare:email'),
-        message = new EmailMessage(
-          'admin@chientrm.com',
-          'admin@chientrm.com',
-          msg.asRaw()
-        );
+        message = new EmailMessage(addr, recipent, msg.asRaw());
       await seb.send(message);
     } else {
       const proxy = new SendEmailProxy({
@@ -92,6 +89,15 @@ const json = <T>(data: T) => {
       });
       await proxy.post();
     }
-  };
+  },
+  createServiceBinding = (
+    name: string,
+    options?: { hostname?: string }
+  ): Fetcher =>
+    new FetcherProxyHolder({
+      host: options?.hostname ?? 'http://localhost:8787',
+      name,
+      payload: {},
+    });
 
-export { createD1, createWorker, sendEmail };
+export { createD1, createServiceBinding, createWorker, sendEmail };

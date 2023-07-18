@@ -19,6 +19,10 @@ Enable Cloudflare Workers runtime for local development.
 
 ### D1Database
 
+```ts
+import { createD1 } from 'cf-workers-proxy';
+```
+
 | Function    | Status |
 | ----------- | ------ |
 | `prepare()` | ✅     |
@@ -39,6 +43,10 @@ Enable Cloudflare Workers runtime for local development.
 ### Email Routing
 
 ```ts
+import { sendEmail } from 'cf-workers-proxy';
+```
+
+```ts
 sendEmail = async (data : {
     seb?: SendEmail;        // Platform binding object
     sebName: string;        // send_email binding name
@@ -51,6 +59,17 @@ sendEmail = async (data : {
     options?: { hostname?: string };
   })
 ```
+
+### Service Bindings
+
+```ts
+import { createServiceBinding } from 'cf-workers-proxy';
+```
+
+| Function    | Status |
+| ----------- | ------ |
+| `fetch()`   | ✅     |
+| `connect()` | ❌     |
 
 ## Contributing
 
