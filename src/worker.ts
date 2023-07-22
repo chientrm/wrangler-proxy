@@ -1,9 +1,7 @@
-import { createMimeMessage } from 'mimetext';
 import type { ErrorResult, PostData, SuccessResult } from './data';
 import { ProxyFactory } from './factory';
 import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
 import { FetcherProxyHolder } from './proxies/fetcher/proxy_holder';
-import { SendEmailProxy } from './proxies/send_email/proxy';
 
 const json = <T>(data: T) => {
     const result: SuccessResult<T> = { status: 200, data },
@@ -51,45 +49,6 @@ const json = <T>(data: T) => {
       name,
       payload: {},
     }),
-  sendEmail = async ({
-    seb,
-    sebName,
-    name,
-    addr,
-    recipent,
-    subject,
-    contentType,
-    data,
-    options,
-  }: {
-    seb?: SendEmail;
-    sebName: string;
-    name: string;
-    addr: string;
-    recipent: string;
-    subject: string;
-    contentType: string;
-    data: string;
-    options?: { hostname?: string };
-  }) => {
-    if (seb) {
-      const msg = createMimeMessage();
-      msg.setSender({ name, addr });
-      msg.setRecipient(recipent);
-      msg.setSubject(subject);
-      msg.addMessage({ contentType, data });
-      const { EmailMessage } = await import('cloudflare:email'),
-        message = new EmailMessage(addr, recipent, msg.asRaw());
-      await seb.send(message);
-    } else {
-      const proxy = new SendEmailProxy({
-        host: options?.hostname ?? 'http://localhost:8787',
-        name,
-        payload: { sebName, name, addr, recipent, subject, contentType, data },
-      });
-      await proxy.post();
-    }
-  },
   createServiceBinding = (
     name: string,
     options?: { hostname?: string }
@@ -100,4 +59,4 @@ const json = <T>(data: T) => {
       payload: {},
     });
 
-export { createD1, createServiceBinding, createWorker, sendEmail };
+export { createD1, createServiceBinding, createWorker };

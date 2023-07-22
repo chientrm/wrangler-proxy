@@ -21,8 +21,7 @@ require('esbuild')
                     });
                 },
             },
-        ],
-        external: ['cloudflare:email']
+        ]
     })
     .then((context) => context.watch())
     .then(() => {
