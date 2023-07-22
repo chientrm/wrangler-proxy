@@ -1,5 +1,8 @@
 # cf-workers-proxy
 
+[![Download](https://img.shields.io/npm/dt/cf-workers-proxy)](https://www.npmjs.com/package/cf-workers-proxy)
+[![Version](https://img.shields.io/npm/v/cf-workers-proxy)](https://github.com/chientrm/cf-workers-proxy)
+
 Enable Cloudflare Workers runtime for local development.
 
 ## How to use?
