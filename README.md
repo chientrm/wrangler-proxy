@@ -18,6 +18,7 @@ Enable Cloudflare Workers runtime for local development.
 ## Roadmap
 
 - ❌ Not started
+- 🟡 Partially implemented
 - ✅ Complete
 
 ### D1Database
@@ -53,6 +54,20 @@ import { createServiceBinding } from 'cf-workers-proxy';
 | ----------- | ------ |
 | `fetch()`   | ✅     |
 | `connect()` | ❌     |
+
+### KVNamespace
+
+```ts
+import { createKV } from 'cf-workers-proxy';
+```
+
+| Function            | Status |
+| ------------------- | ------ |
+| `put()`             | 🟡     |
+| `get()`             | 🟡     |
+| `getWithMetadata()` | ❌     |
+| `delete()`          | ❌     |
+| `list()`            | ❌     |
 
 ## Contributing
 

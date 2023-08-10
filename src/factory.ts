@@ -4,6 +4,8 @@ import { D1DatabasePreparedStatementAllProxy } from './proxies/d1_database/prepa
 import { D1DatabasePreparedStatementFirstProxy } from './proxies/d1_database/prepared_statement/first/proxy';
 import { D1DatabasePreparedStatementRunProxy } from './proxies/d1_database/prepared_statement/run/proxy';
 import { FetcherFetchProxy } from './proxies/fetcher/fetch/proxy';
+import { KVGetProxy } from './proxies/kv/get/proxy';
+import { KVPutProxy } from './proxies/kv/put/proxy';
 
 class ProxyFactory {
   public static getProxy(postData: PostData) {
@@ -19,6 +21,10 @@ class ProxyFactory {
         return new D1DatabaseExecProxy({ name, payload });
       case FetcherFetchProxy.proxyType:
         return new FetcherFetchProxy({ name, payload });
+      case KVGetProxy.proxyType:
+        return new KVGetProxy({ name, payload });
+      case KVPutProxy.proxyType:
+        return new KVPutProxy({ name, payload });
       default:
         throw new Error('Unknown proxy type.');
     }

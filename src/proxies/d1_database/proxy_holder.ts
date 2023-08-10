@@ -18,11 +18,11 @@ class D1DatabaseProxyHolder extends ProxyHolder<Payload> implements D1Database {
   ): Promise<D1Result<T>[]> {
     throw new Error('Method not implemented.');
   }
-  async exec<T = unknown>(query: string): Promise<D1Result<T>> {
+  async exec(query: string) {
     const { host, name } = this,
       payload = { query },
       proxy = new D1DatabaseExecProxy({ host, name, payload });
-    return proxy.post<D1Result<T>>();
+    return proxy.post<D1ExecResult>();
   }
 }
 

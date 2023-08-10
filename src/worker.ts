@@ -2,6 +2,7 @@ import type { ErrorResult, PostData, SuccessResult } from './data';
 import { ProxyFactory } from './factory';
 import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
 import { FetcherProxyHolder } from './proxies/fetcher/proxy_holder';
+import { KVProxyHolder } from './proxies/kv/proxy_holder';
 
 const json = <T>(data: T) => {
     const result: SuccessResult<T> = { status: 200, data },
@@ -49,6 +50,12 @@ const json = <T>(data: T) => {
       name,
       payload: {},
     }),
+  createKV = (name: string, options?: { hostname?: string }): KVNamespace =>
+    new KVProxyHolder({
+      host: options?.hostname ?? 'http://localhost:8787',
+      name,
+      payload: {},
+    }),
   createServiceBinding = (
     name: string,
     options?: { hostname?: string }
@@ -59,4 +66,4 @@ const json = <T>(data: T) => {
       payload: {},
     });
 
-export { createD1, createServiceBinding, createWorker };
+export { createD1, createKV, createServiceBinding, createWorker };
