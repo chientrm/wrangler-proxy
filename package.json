@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "watch": "node watch.js",
-    "build": "node build.js"
+    "build": "rm -rf dist && node build.js && npx tsc -p tsconfig.json"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230814.0",
@@ -19,6 +19,10 @@
     "type": "git",
     "url": "git+https://github.com/chientrm/cf-workers-proxy.git"
   },
+  "author": "chientrm",
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "cloudflare",
     "workers",
