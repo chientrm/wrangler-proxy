@@ -8,13 +8,13 @@
     "build": "node build.js"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230807.0",
-    "esbuild": "^0.19.0",
-    "itty-router": "^4.0.14",
+    "@cloudflare/workers-types": "^4.20230814.0",
+    "esbuild": "^0.19.2",
+    "itty-router": "^4.0.22",
     "itty-router-extras": "^0.4.5",
     "mimetext": "^3.0.16",
     "typescript": "^5.1.6",
-    "wrangler": "^3.5.0"
+    "wrangler": "^3.5.1"
   },
   "repository": {
     "type": "git",

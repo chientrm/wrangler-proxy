@@ -23,10 +23,9 @@ class D1DatabasePreparedStatementFirstProxy extends Proxy<Payload> {
   async execute(env: any): Promise<any> {
     const d1 = env[this.name] as D1Database,
       { query, values, colName } = this.payload!,
-      result = await d1
-        .prepare(query)
-        .bind(...(values ?? []))
-        .first(colName);
+      statement1 = d1.prepare(query).bind(...(values ?? [])),
+      statement2 = colName ? statement1.first(colName) : statement1.first(),
+      result = await statement2;
     return result;
   }
 }
