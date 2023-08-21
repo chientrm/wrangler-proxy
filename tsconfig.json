@@ -99,5 +99,6 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
     // "rootDir": "./"
   },
+  "types": ["@cloudflare/workers-types"],
   "include": ["src/**/*", "index.ts"]
 }
