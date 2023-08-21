@@ -96,9 +96,9 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
-    // "rootDir": "./"
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    // "rootDir": "./",
+    "types": ["@cloudflare/workers-types"]
   },
-  "types": ["@cloudflare/workers-types"],
   "include": ["src/**/*", "index.ts"]
 }
