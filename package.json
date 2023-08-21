@@ -3,6 +3,7 @@
   "description": "Enable Cloudflare Workers runtime for local development",
   "version": "0.0.1",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
     "watch": "node watch.js",
     "build": "node build.js"

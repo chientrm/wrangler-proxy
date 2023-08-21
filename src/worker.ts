@@ -64,6 +64,16 @@ const json = <T>(data: T) => {
       host: options?.hostname ?? 'http://localhost:8787',
       name,
       payload: {},
-    });
+    }),
+  waitUntil = (
+    promise: Promise<any>,
+    waitUntil?: (promise: Promise<any>) => void
+  ) => {
+    if (waitUntil) {
+      return waitUntil(promise);
+    } else {
+      return promise;
+    }
+  };
 
-export { createD1, createKV, createServiceBinding, createWorker };
+export { createD1, createKV, createServiceBinding, createWorker, waitUntil };

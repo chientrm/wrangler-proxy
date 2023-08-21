@@ -69,6 +69,31 @@ import { createKV } from 'cf-workers-proxy';
 | `delete()`          | ❌     |
 | `list()`            | ❌     |
 
+### `waitUntil`
+
+```ts
+// file: app.d.ts
+namespace App {
+  interface Platform {
+    context: {
+      waitUntil(promise: Promise<any>): void;
+    };
+  }
+}
+```
+
+```ts
+// file: +page.server.ts
+import { waitUntil } from 'cf-workers-proxy';
+
+export const actions = {
+  default: ({ locals, platform }) => {
+    waitUntil(async () => {}, platform?.context.waitUntil);
+    return { message: 'success' };
+  },
+};
+```
+
 ## Contributing
 
 Just pull request 😐
