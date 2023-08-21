@@ -1,3 +1,9 @@
-import { createD1, createWorker, waitUntil } from './src/worker';
+import {
+  createD1,
+  createKV,
+  createServiceBinding,
+  createWorker,
+  waitUntil,
+} from './src/worker';
 
-export { createD1, createWorker, waitUntil };
+export { createD1, createKV, createServiceBinding, createWorker, waitUntil };
