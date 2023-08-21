@@ -1,6 +1,6 @@
 {
   "name": "cf-workers-proxy",
-  "description": "Enable Cloudflare Workers runtime for local development",
+  "description": "Enable Cloudflare Workers runtime for local development. Compatible with DrizzleORM",
   "version": "0.0.1",
   "type": "module",
   "main": "dist/index.js",

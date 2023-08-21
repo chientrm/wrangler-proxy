@@ -4,7 +4,8 @@ import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
 import { FetcherProxyHolder } from './proxies/fetcher/proxy_holder';
 import { KVProxyHolder } from './proxies/kv/proxy_holder';
 
-const json = <T>(data: T) => {
+const defaultHostname = 'http://127.0.0.1:8787',
+  json = <T>(data: T) => {
     const result: SuccessResult<T> = { status: 200, data },
       response = new Response(JSON.stringify(result), {
         headers: { 'Content-Type': 'application/json' },
@@ -44,24 +45,24 @@ const json = <T>(data: T) => {
         return new Response(null, { status: 400 });
       },
     },
-  createD1 = (name: string, options?: { hostname?: string }): D1Database =>
+  createD1 = (name: string, options?: { hostname: string }): D1Database =>
     new D1DatabaseProxyHolder({
-      host: options?.hostname ?? 'http://127.0.0.1:8787',
+      host: options?.hostname ?? defaultHostname,
       name,
       payload: {},
     }),
-  createKV = (name: string, options?: { hostname?: string }): KVNamespace =>
+  createKV = (name: string, options?: { hostname: string }): KVNamespace =>
     new KVProxyHolder({
-      host: options?.hostname ?? 'http://127.0.0.1:8787',
+      host: options?.hostname ?? defaultHostname,
       name,
       payload: {},
     }),
   createServiceBinding = (
     name: string,
-    options?: { hostname?: string }
+    options?: { hostname: string }
   ): Fetcher =>
     new FetcherProxyHolder({
-      host: options?.hostname ?? 'http://127.0.0.1:8787',
+      host: options?.hostname ?? defaultHostname,
       name,
       payload: {},
     }),
