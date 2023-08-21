@@ -5,15 +5,81 @@
 
 Enable Cloudflare Workers runtime for local development. Compatible with DrizzleORM.
 
-## How to use?
+## Get Started
 
-### Setup proxy server
+### Install wrangler
 
-- [Setup Wrangler server](docs/server.md)
+```
+npm i -D wrangler
+```
 
-### Setup client
+### Install `cf-workers-proxy`
 
-- [Setup for SvelteKit project](docs/sveltekit.md)
+```
+npm i -D cf-workers-proxy
+```
+
+### Example `wrangler.toml`
+
+```toml
+name = "worker"
+compatibility_date = "2023-07-02"
+
+[[d1_databases]]
+binding = "D1"
+database_name = "D1"
+database_id = "<d1-id>"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "<kv-id>"
+preview_id = "<same-kv-id-as-above>"
+
+[[services]]
+binding = "WORKER"
+service = "<worker-name>"
+environment = "production"
+```
+
+### Start proxy
+
+```
+npx wrangler node_modules/cf-workers-proxy/dist/worker.js --remote
+```
+
+### Example SvelteKit project
+
+```ts
+// file: app.d.ts
+
+declare global {
+  namespace App {
+    interface Locals {
+      D1: D1Database;
+    }
+    interface Platform {
+      env?: {
+        D1: D1Database;
+      };
+    }
+  }
+}
+
+export {};
+```
+
+```ts
+// file: src/hooks.server.ts
+
+import { createD1 } from 'cf-workers-proxy';
+
+export const handle = ({ event, resolve }) => {
+  event.locals.D1 = event.platform?.env?.D1 ?? createD1('D1');
+  // or createD1('D1', { hostname: 'custom-host-name' });
+  // default hostname is `http://127.0.0.1:8787`
+  return resolve(event);
+};
+```
 
 ## Roadmap
 
@@ -92,29 +158,6 @@ export const actions = {
     return { message: 'success' };
   },
 };
-```
-
-## Example `wrangler.toml`
-
-```toml
-name = "worker"
-main = "src/worker.ts"
-compatibility_date = "2023-07-02"
-
-[[d1_databases]]
-binding = "D1"
-database_name = "D1"
-database_id = "<d1-id>"
-
-[[kv_namespaces]]
-binding = "KV"
-id = "<kv-id>"
-preview_id = "<same-kv-id-as-above>"
-
-[[services]]
-binding = "WORKER"
-service = "<worker-name>"
-environment = "production"
 ```
 
 ## Contributing
