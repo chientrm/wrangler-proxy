@@ -32,7 +32,7 @@ import { createD1 } from 'cf-workers-proxy';
 
 export const handle = ({ event, resolve }) => {
   event.locals.D1 = event.platform?.env?.D1 ?? createD1('D1');
-  // createD1('D1', { hostname: 'http://localhost:{default_port_is_8787}' });
+  // createD1('D1', { hostname: 'http://127.0.0.1:{default_port_is_8787}' });
   return resolve(event);
 };
 ```

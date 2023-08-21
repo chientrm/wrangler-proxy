@@ -46,13 +46,13 @@ const json = <T>(data: T) => {
     },
   createD1 = (name: string, options?: { hostname?: string }): D1Database =>
     new D1DatabaseProxyHolder({
-      host: options?.hostname ?? 'http://localhost:8787',
+      host: options?.hostname ?? 'http://127.0.0.1:8787',
       name,
       payload: {},
     }),
   createKV = (name: string, options?: { hostname?: string }): KVNamespace =>
     new KVProxyHolder({
-      host: options?.hostname ?? 'http://localhost:8787',
+      host: options?.hostname ?? 'http://127.0.0.1:8787',
       name,
       payload: {},
     }),
@@ -61,7 +61,7 @@ const json = <T>(data: T) => {
     options?: { hostname?: string }
   ): Fetcher =>
     new FetcherProxyHolder({
-      host: options?.hostname ?? 'http://localhost:8787',
+      host: options?.hostname ?? 'http://127.0.0.1:8787',
       name,
       payload: {},
     }),
