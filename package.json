@@ -1,6 +1,6 @@
 {
-  "name": "cf-workers-proxy",
-  "description": "Enable Cloudflare Workers runtime for local development. Compatible with DrizzleORM",
+  "name": "wrangler-proxy",
+  "description": "Wrangler Proxy for your favorite frameworks. Compatible with DrizzleORM",
   "version": "0.0.1",
   "type": "module",
   "main": "dist/index.js",
@@ -11,23 +11,22 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230814.0",
     "esbuild": "^0.19.2",
-    "mimetext": "^3.0.16",
-    "typescript": "^5.1.6",
-    "wrangler": "^3.5.1"
+    "typescript": "^5.1.6"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chientrm/cf-workers-proxy.git"
+    "url": "git+https://github.com/chientrm/wrangler-proxy.git"
   },
   "author": "chientrm",
   "files": [
     "dist"
   ],
   "keywords": [
-    "cloudflare",
     "workers",
-    "proxy",
-    "local",
-    "development"
+    "cloudflare",
+    "kv",
+    "d1",
+    "wrangler",
+    "proxy"
   ]
 }

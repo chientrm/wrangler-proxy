@@ -1,22 +1,16 @@
-# cf-workers-proxy
+# wrangler-proxy
 
-[![Download](https://img.shields.io/npm/dt/cf-workers-proxy)](https://www.npmjs.com/package/cf-workers-proxy)
-[![Version](https://img.shields.io/npm/v/cf-workers-proxy)](https://github.com/chientrm/cf-workers-proxy)
+[![Download](https://img.shields.io/npm/dt/wrangler-proxy)](https://www.npmjs.com/package/wrangler-proxy)
+[![Version](https://img.shields.io/npm/v/wrangler-proxy)](https://github.com/chientrm/wrangler-proxy)
 
-Enable Cloudflare Workers runtime for local development. Compatible with DrizzleORM.
+Wrangler Proxy for your favorite frameworks. Compatible with DrizzleORM.
 
 ## Get Started
 
-### Install wrangler
+### Install
 
 ```
-npm i -D wrangler
-```
-
-### Install `cf-workers-proxy`
-
-```
-npm i -D cf-workers-proxy
+npm i -D wrangler-proxy
 ```
 
 ### Example `wrangler.toml`
@@ -44,7 +38,7 @@ environment = "production"
 ### Start proxy
 
 ```
-npx wrangler node_modules/cf-workers-proxy/dist/worker.js --remote
+npx wrangler node_modules/wrangler-proxy/dist/worker.js --remote
 ```
 
 ### Example SvelteKit project
@@ -71,7 +65,7 @@ export {};
 ```ts
 // file: src/hooks.server.ts
 
-import { createD1 } from 'cf-workers-proxy';
+import { createD1 } from 'wrangler-proxy';
 
 export const handle = ({ event, resolve }) => {
   event.locals.D1 = event.platform?.env?.D1 ?? createD1('D1');
@@ -90,7 +84,7 @@ export const handle = ({ event, resolve }) => {
 ### D1Database
 
 ```ts
-import { createD1 } from 'cf-workers-proxy';
+import { createD1 } from 'wrangler-proxy';
 ```
 
 | Function    | Status |
@@ -113,7 +107,7 @@ import { createD1 } from 'cf-workers-proxy';
 ### Service Bindings
 
 ```ts
-import { createServiceBinding } from 'cf-workers-proxy';
+import { createServiceBinding } from 'wrangler-proxy';
 ```
 
 | Function    | Status |
@@ -124,7 +118,7 @@ import { createServiceBinding } from 'cf-workers-proxy';
 ### KVNamespace
 
 ```ts
-import { createKV } from 'cf-workers-proxy';
+import { createKV } from 'wrangler-proxy';
 ```
 
 | Function            | Status |
@@ -150,7 +144,7 @@ namespace App {
 
 ```ts
 // file: +page.server.ts
-import { waitUntil } from 'cf-workers-proxy';
+import { waitUntil } from 'wrangler-proxy';
 
 export const actions = {
   default: ({ locals, platform }) => {
