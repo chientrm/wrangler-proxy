@@ -94,6 +94,29 @@ export const actions = {
 };
 ```
 
+## Example `wrangler.toml`
+
+```toml
+name = "worker"
+main = "src/worker.ts"
+compatibility_date = "2023-07-02"
+
+[[d1_databases]]
+binding = "D1"
+database_name = "D1"
+database_id = "<d1-id>"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "<kv-id>"
+preview_id = "<same-kv-id-as-above>"
+
+[[services]]
+binding = "WORKER"
+service = "<worker-name>"
+environment = "production"
+```
+
 ## Contributing
 
 Just pull request 😐
