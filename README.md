@@ -37,8 +37,16 @@ environment = "production"
 
 ### Start proxy
 
+Remote mode
+
 ```
-npx wrangler node_modules/wrangler-proxy/dist/worker.js --remote
+wrangler node_modules/wrangler-proxy/dist/worker.js --remote
+```
+
+Local mode
+
+```
+wrangler node_modules/wrangler-proxy/dist/worker.js
 ```
 
 ### Example SvelteKit project
