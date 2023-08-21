@@ -1,6 +1,7 @@
 import { ProxyHolder } from '../../proxy';
 import { D1DatabasePreparedStatementAllProxy } from './all/proxy';
 import { D1DatabasePreparedStatementFirstProxy } from './first/proxy';
+import { D1DatabasePreparedStatementRawProxy } from './raw/proxy';
 import { D1DatabasePreparedStatementRunProxy } from './run/proxy';
 
 interface Payload {
@@ -41,7 +42,10 @@ class D1DatabasePreparedStatementProxy
     return proxy.post<D1Result<T>>();
   }
   raw<T = unknown>(): Promise<T[]> {
-    throw new Error('Method not implemented.');
+    const { host, name } = this,
+      payload = this.payload,
+      proxy = new D1DatabasePreparedStatementRawProxy({ host, name, payload });
+    return proxy.post<T[]>();
   }
 }
 

@@ -41,7 +41,7 @@ import { createD1 } from 'cf-workers-proxy';
 | `first()` | ✅     |
 | `run()`   | ✅     |
 | `all()`   | ✅     |
-| `raw()`   | ❌     |
+| `raw()`   | ✅     |
 | `bind()`  | ✅     |
 
 ### Service Bindings

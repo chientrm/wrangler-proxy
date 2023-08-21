@@ -2,6 +2,7 @@ import { PostData } from './data';
 import { D1DatabaseExecProxy } from './proxies/d1_database/exec/proxy';
 import { D1DatabasePreparedStatementAllProxy } from './proxies/d1_database/prepared_statement/all/proxy';
 import { D1DatabasePreparedStatementFirstProxy } from './proxies/d1_database/prepared_statement/first/proxy';
+import { D1DatabasePreparedStatementRawProxy } from './proxies/d1_database/prepared_statement/raw/proxy';
 import { D1DatabasePreparedStatementRunProxy } from './proxies/d1_database/prepared_statement/run/proxy';
 import { FetcherFetchProxy } from './proxies/fetcher/fetch/proxy';
 import { KVGetProxy } from './proxies/kv/get/proxy';
@@ -17,6 +18,8 @@ class ProxyFactory {
         return new D1DatabasePreparedStatementFirstProxy({ name, payload });
       case D1DatabasePreparedStatementRunProxy.proxyType:
         return new D1DatabasePreparedStatementRunProxy({ name, payload });
+      case D1DatabasePreparedStatementRawProxy.proxyType:
+        return new D1DatabasePreparedStatementRawProxy({ name, payload });
       case D1DatabaseExecProxy.proxyType:
         return new D1DatabaseExecProxy({ name, payload });
       case FetcherFetchProxy.proxyType:
