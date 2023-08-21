@@ -156,7 +156,7 @@ import { waitUntil } from 'wrangler-proxy';
 
 export const actions = {
   default: ({ locals, platform }) => {
-    waitUntil(async () => {}, platform?.context.waitUntil);
+    waitUntil(async () => {}, platform?.context);
     return { message: 'success' };
   },
 };

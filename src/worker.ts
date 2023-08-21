@@ -68,10 +68,10 @@ const defaultHostname = 'http://127.0.0.1:8787',
     }),
   waitUntil = (
     promise: Promise<any>,
-    waitUntil?: (promise: Promise<any>) => void
+    context: { waitUntil: (promise: Promise<any>) => void }
   ) => {
-    if (waitUntil) {
-      return waitUntil(promise);
+    if (context.waitUntil) {
+      return context.waitUntil(promise);
     } else {
       return promise;
     }
