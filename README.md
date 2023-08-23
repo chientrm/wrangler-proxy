@@ -161,11 +161,11 @@ import { connectR2 } from 'wrangler-proxy';
 | Function                  | Status |
 | ------------------------- | ------ |
 | `head()`                  | ❌     |
-| `get()`                   | 🟡     |
-| `put()`                   | 🟡     |
+| `get()`                   | ✅     |
+| `put()`                   | ✅     |
 | `createMultipartUpload()` | ❌     |
 | `resumeMultipartUpload()` | ❌     |
-| `delete()`                | ❌     |
+| `delete()`                | ✅     |
 | `list()`                  | ❌     |
 
 ### `waitUntil`

@@ -1,4 +1,5 @@
 import { ProxyHolder } from '../proxy';
+import { R2DeleteProxy } from './delete/proxy';
 import { R2GetProxy } from './get/proxy';
 import { R2PutProxy } from './put/proxy';
 
@@ -81,7 +82,9 @@ export class R2ProxyHolder extends ProxyHolder<{}> implements R2Bucket {
     options?: unknown
   ): Promise<R2Object | null> | Promise<R2Object> {
     const data =
-      typeof value === 'string' || value instanceof ArrayBuffer
+      typeof value === 'string' ||
+      value instanceof ArrayBuffer ||
+      value instanceof Buffer
         ? new ReadableStream({
             start(controller) {
               controller.enqueue(value);
@@ -115,7 +118,9 @@ export class R2ProxyHolder extends ProxyHolder<{}> implements R2Bucket {
     throw new Error('Method not implemented.');
   }
   delete(keys: string | string[]): Promise<void> {
-    throw new Error('Method not implemented.');
+    const { host, name } = this,
+      proxy = new R2DeleteProxy({ host, name, metadata: { keys } });
+    return proxy.post();
   }
   list(options?: R2ListOptions | undefined): Promise<R2Objects> {
     throw new Error('Method not implemented.');
