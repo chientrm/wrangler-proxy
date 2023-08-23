@@ -3,7 +3,7 @@
 [![Download](https://img.shields.io/npm/dt/wrangler-proxy)](https://www.npmjs.com/package/wrangler-proxy)
 [![Version](https://img.shields.io/npm/v/wrangler-proxy)](https://github.com/chientrm/wrangler-proxy)
 
-Wrangler Proxy for your favorite frameworks. Compatible with DrizzleORM.
+Wrangler Proxy exposes Workers API to outside and integrate to your favorite frameworks. Compatible with DrizzleORM.
 
 ## Get Started
 
