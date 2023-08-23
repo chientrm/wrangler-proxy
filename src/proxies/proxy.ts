@@ -1,4 +1,4 @@
-import { ErrorResult, PostData, Result, SuccessResult } from '../data';
+import { Data } from '../data';
 import { ProxyHolder } from './proxy_holder';
 
 abstract class Proxy<T> extends ProxyHolder<T> {
@@ -7,36 +7,46 @@ abstract class Proxy<T> extends ProxyHolder<T> {
     host,
     name,
     proxyType,
-    payload,
+    metadata,
+    data,
   }: {
     host?: string;
     name: string;
     proxyType: string;
-    payload: T;
+    metadata: T;
+    data: Data;
   }) {
-    super({ host, name, payload });
+    super({ host, name, metadata, data });
     this.proxyType = proxyType;
   }
-  async post<D>() {
-    const { name, proxyType } = this,
-      payload = this.payload!,
-      postData: PostData = { name, proxyType, payload },
-      response = await fetch(this.host!, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postData),
+  async post() {
+    const { host, name, proxyType, metadata, data } = this,
+      params = new URLSearchParams({
+        name,
+        proxyType,
+        metadata: JSON.stringify(metadata),
       }),
-      result = await response.json<Result>();
-    if (result.status === 200) {
-      return (result as SuccessResult<D>).data;
-    } else if (result.status === 500) {
-      const error = (result as ErrorResult).error;
-      throw new Error(error.message);
+      method = 'POST',
+      response = await fetch(`${host!}?${params}`, {
+        method,
+        body: data,
+        // @ts-ignore
+        duplex: 'half',
+      });
+    if (response.ok) {
+      return this.receive(response);
     } else {
-      throw new Error('Invalid response status code');
+      throw new Error(
+        JSON.stringify({
+          status: response.status,
+          statusText: response.statusText,
+          message: await response.text(),
+        })
+      );
     }
   }
-  abstract execute(env: any): Promise<any>;
+  abstract execute(env: any): Promise<Response>;
+  abstract receive(response: Response): Promise<any>;
 }
 
 export { Proxy, ProxyHolder };

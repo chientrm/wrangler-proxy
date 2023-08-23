@@ -1,21 +1,15 @@
-interface Result {
-  status: 200 | 500;
-}
-
-interface SuccessResult<T> extends Result {
-  status: 200;
-  data: T;
-}
-
-interface ErrorResult extends Result {
-  status: 500;
-  error: Error;
-}
-
-interface PostData {
+export interface Params {
   proxyType: string;
   name: string;
-  payload: any;
+  metadata: any;
 }
 
-export type { ErrorResult, PostData, Result, SuccessResult };
+export type Data = ReadableStream<any> | null;
+
+export const jsonInit: ResponseInit = {
+  headers: { 'Content-Type': 'application/json' },
+};
+
+export const stringInit: ResponseInit = {
+  headers: { 'Content-Type': 'text/plain' },
+};

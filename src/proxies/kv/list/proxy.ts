@@ -2,11 +2,11 @@ import { jsonInit } from '../../../data';
 import { Proxy } from '../../proxy';
 
 interface Metadata {
-  query: string;
+  options?: KVNamespaceListOptions;
 }
 
-class D1DatabaseExecProxy extends Proxy<Metadata> {
-  static readonly proxyType = 'D1DatabaseExecProxy';
+export class KVListProxy extends Proxy<Metadata> {
+  static readonly proxyType = 'KVListProxy';
   constructor({
     host,
     name,
@@ -16,19 +16,17 @@ class D1DatabaseExecProxy extends Proxy<Metadata> {
     name: string;
     metadata: Metadata;
   }) {
-    const proxyType = D1DatabaseExecProxy.proxyType;
+    const proxyType = KVListProxy.proxyType;
     super({ proxyType, host, name, metadata, data: null });
   }
   async execute(env: any) {
     const { name, metadata } = this,
-      { query } = metadata,
-      d1 = env[name] as D1Database,
-      result = await d1.exec(query);
+      { options } = metadata,
+      kv = env[name] as KVNamespace;
+    const result = await kv.list(options);
     return new Response(JSON.stringify(result), jsonInit);
   }
   receive(response: Response): Promise<any> {
     return response.json();
   }
 }
-
-export { D1DatabaseExecProxy };

@@ -2,13 +2,15 @@ import { ProxyHolder } from '../proxy';
 import { D1DatabaseExecProxy } from './exec/proxy';
 import { D1DatabasePreparedStatementProxy } from './prepared_statement/proxy';
 
-interface Payload {}
-
-class D1DatabaseProxyHolder extends ProxyHolder<Payload> implements D1Database {
+class D1DatabaseProxyHolder extends ProxyHolder<{}> implements D1Database {
   prepare(query: string): D1PreparedStatement {
-    const { host, name } = this,
-      payload = { query };
-    return new D1DatabasePreparedStatementProxy({ host, name, payload });
+    const { host, name } = this;
+    return new D1DatabasePreparedStatementProxy({
+      host,
+      name,
+      metadata: { query },
+      data: null,
+    });
   }
   dump(): Promise<ArrayBuffer> {
     throw new Error('Method not implemented.');
@@ -20,9 +22,8 @@ class D1DatabaseProxyHolder extends ProxyHolder<Payload> implements D1Database {
   }
   async exec(query: string) {
     const { host, name } = this,
-      payload = { query },
-      proxy = new D1DatabaseExecProxy({ host, name, payload });
-    return proxy.post<D1ExecResult>();
+      proxy = new D1DatabaseExecProxy({ host, name, metadata: { query } });
+    return proxy.post();
   }
 }
 

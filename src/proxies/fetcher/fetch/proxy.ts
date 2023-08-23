@@ -1,35 +1,41 @@
+import { Data } from '../../../data';
 import { Proxy } from '../../proxy';
 
-interface Payload {
+interface Metadata {
   path: string;
   method?: string;
-  body: string;
+  headers: [key: string, value: string][];
 }
 
-class FetcherFetchProxy extends Proxy<Payload> {
+class FetcherFetchProxy extends Proxy<Metadata> {
   static readonly proxyType = 'FetcherFetchProxy';
   constructor({
     host,
     name,
-    payload,
+    metadata,
+    data,
   }: {
     host?: string;
     name: string;
-    payload: Payload;
+    metadata: Metadata;
+    data: Data;
   }) {
     const proxyType = FetcherFetchProxy.proxyType;
-    super({ proxyType, host, name, payload });
+    super({ proxyType, host, name, metadata, data });
   }
   async execute(env: any): Promise<any> {
-    const { name } = this,
-      { path, body, method } = this.payload,
+    const { name, metadata, data } = this,
+      { path, method, headers } = metadata,
       fetcher = env[name] as Fetcher,
-      result = await fetcher.fetch(path, {
-        body,
+      response = await fetcher.fetch(path, {
         method,
-        headers: { 'content-type': 'application/json' },
+        headers,
+        body: data,
       });
-    return result;
+    return response;
+  }
+  receive(response: Response): Promise<any> {
+    return Promise.resolve(response);
   }
 }
 

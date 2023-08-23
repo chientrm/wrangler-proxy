@@ -35,7 +35,7 @@ service = "<worker-name>"
 environment = "production"
 ```
 
-### Start proxy
+### Start proxy for dev
 
 Remote mode
 
@@ -83,10 +83,25 @@ export const handle = ({ event, resolve }) => {
 };
 ```
 
+## Using `wrangler-proxy` to expose workers API
+
+Init worker
+
+```
+npm create cloudflare@2 - .
+```
+
+```ts
+// file: src/index.ts
+import { createWorker } from 'wrangler-proxy';
+
+export default createWorker();
+```
+
 ## Roadmap
 
 - ❌ Not started
-- 🟡 Partially implemented
+- 🟡 Not tested
 - ✅ Complete
 
 ### D1Database
@@ -133,9 +148,9 @@ import { createKV } from 'wrangler-proxy';
 | ------------------- | ------ |
 | `put()`             | 🟡     |
 | `get()`             | 🟡     |
-| `getWithMetadata()` | ❌     |
-| `delete()`          | ❌     |
-| `list()`            | ❌     |
+| `getWithMetadata()` | 🟡     |
+| `delete()`          | 🟡     |
+| `list()`            | 🟡     |
 
 ### `waitUntil`
 

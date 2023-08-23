@@ -1,11 +1,11 @@
 import { ProxyHolder } from '../proxy';
+import { KVDeleteProxy } from './delete/proxy';
 import { KVGetProxy } from './get/proxy';
+import { KVListProxy } from './list/proxy';
 import { KVPutProxy } from './put/proxy';
 
-interface Payload {}
-
 export class KVProxyHolder<Key extends string = string>
-  extends ProxyHolder<Payload>
+  extends ProxyHolder<{}>
   implements KVNamespace<Key>
 {
   get(
@@ -43,31 +43,56 @@ export class KVProxyHolder<Key extends string = string>
     | Promise<ArrayBuffer | null>
     | Promise<ReadableStream<any> | null>
     | Promise<ExpectedValue | null> {
-    if (options) {
-      throw new Error('Method not implemented.');
-    }
     const { host, name } = this,
-      payload = { key },
-      proxy = new KVGetProxy({ host, name, payload });
-    return proxy.post<string | null>();
+      proxy = new KVGetProxy({
+        host,
+        name,
+        metadata: {
+          key,
+          options: options as KVNamespaceGetOptions<any> | undefined,
+        },
+      });
+    return proxy.post();
   }
-  list<Metadata = unknown>(
+  async list<Metadata = unknown>(
     options?: KVNamespaceListOptions | undefined
   ): Promise<KVNamespaceListResult<Metadata, Key>> {
-    throw new Error('Method not implemented.');
+    const { host, name } = this,
+      proxy = new KVListProxy({
+        host,
+        name,
+        metadata: { options },
+      }),
+      result = await proxy.post();
+    return result;
   }
-  put(
+  async put(
     key: Key,
     value: string | ArrayBuffer | ArrayBufferView | ReadableStream<any>,
     options?: KVNamespacePutOptions | undefined
   ): Promise<void> {
-    if (typeof value !== 'string' || options) {
+    const data =
+      typeof value === 'string' || value instanceof ArrayBuffer
+        ? new ReadableStream({
+            start(controller) {
+              controller.enqueue(value);
+              controller.close();
+            },
+          })
+        : value instanceof ReadableStream
+        ? value
+        : undefined;
+    if (!data) {
       throw new Error('Method not implemented.');
     }
     const { host, name } = this,
-      payload = { key, value },
-      proxy = new KVPutProxy({ host, name, payload });
-    return proxy.post();
+      proxy = new KVPutProxy({
+        host,
+        name,
+        metadata: { key, options },
+        data,
+      });
+    await proxy.post();
   }
   getWithMetadata<Metadata = unknown>(
     key: Key,
@@ -120,7 +145,9 @@ export class KVProxyHolder<Key extends string = string>
     | Promise<KVNamespaceGetWithMetadataResult<ReadableStream<any>, Metadata>> {
     throw new Error('Method not implemented.');
   }
-  delete(key: Key): Promise<void> {
-    throw new Error('Method not implemented.');
+  async delete(key: Key): Promise<void> {
+    const { host, name } = this,
+      proxy = new KVDeleteProxy({ host, name, metadata: { key } });
+    await proxy.post();
   }
 }

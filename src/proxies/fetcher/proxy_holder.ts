@@ -1,27 +1,36 @@
 import { ProxyHolder } from '../proxy_holder';
 import { FetcherFetchProxy } from './fetch/proxy';
 
-interface Payload {}
-
-class FetcherProxyHolder extends ProxyHolder<Payload> implements Fetcher {
+class FetcherProxyHolder extends ProxyHolder<{}> implements Fetcher {
   async fetch(
     input: RequestInfo<unknown, CfProperties<unknown>>,
     init?: RequestInit<CfProperties<unknown>> | undefined
   ): Promise<Response> {
+    const data =
+      typeof init?.body === 'string' || init?.body instanceof ArrayBuffer
+        ? new ReadableStream({
+            start(controller) {
+              controller.enqueue(init.body);
+              controller.close();
+            },
+          })
+        : init?.body instanceof ReadableStream
+        ? init.body
+        : undefined;
+    if (!data) {
+      throw new Error('Method not implemented.');
+    }
     const { host, name } = this,
       path = input.toString(),
-      body = init?.body,
-      method = init?.method;
-    if (typeof body == 'string') {
-      const proxy = new FetcherFetchProxy({
+      method = init?.method,
+      headers = init?.headers ? Object.entries(init.headers) : [],
+      proxy = new FetcherFetchProxy({
         host,
         name,
-        payload: { path, body, method },
+        metadata: { path, method, headers },
+        data,
       });
-      const responseBody = await proxy.post<null>();
-      return new Response(responseBody);
-    }
-    throw new Error('Method not implemented.');
+    return proxy.post();
   }
   connect(
     address: string | SocketAddress,

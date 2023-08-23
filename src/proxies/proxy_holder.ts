@@ -1,19 +1,25 @@
+import { Data } from '../data';
+
 abstract class ProxyHolder<T> {
   host?: string;
   name: string;
-  payload: T;
+  metadata: T;
+  data: Data;
   constructor({
     host,
     name,
-    payload,
+    metadata,
+    data,
   }: {
     host?: string;
     name: string;
-    payload: T;
+    metadata: T;
+    data: Data;
   }) {
     this.host = host;
     this.name = name;
-    this.payload = payload;
+    this.metadata = metadata;
+    this.data = data;
   }
 }
 

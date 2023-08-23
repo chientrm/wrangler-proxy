@@ -1,32 +1,36 @@
+import { jsonInit } from '../../../../data';
 import { Proxy } from '../../../proxy';
 
-interface Payload {
+interface Metadata {
   query: string;
   values?: any[];
 }
 
-class D1DatabasePreparedStatementAllProxy extends Proxy<Payload> {
+class D1DatabasePreparedStatementAllProxy extends Proxy<Metadata> {
   static readonly proxyType = 'D1DatabasePreparedStatementAllProxy';
   constructor({
     host,
     name,
-    payload,
+    metadata,
   }: {
     host?: string;
     name: string;
-    payload: Payload;
+    metadata: Metadata;
   }) {
     const proxyType = D1DatabasePreparedStatementAllProxy.proxyType;
-    super({ proxyType, host, name, payload });
+    super({ proxyType, host, name, metadata, data: null });
   }
   async execute(env: any): Promise<any> {
     const d1 = env[this.name] as D1Database,
-      { query, values } = this.payload!,
+      { query, values } = this.metadata,
       result = await d1
         .prepare(query)
         .bind(...(values ?? []))
         .all();
-    return result;
+    return new Response(JSON.stringify(result), jsonInit);
+  }
+  receive(response: Response): Promise<any> {
+    return response.json();
   }
 }
 

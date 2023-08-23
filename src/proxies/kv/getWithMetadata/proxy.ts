@@ -1,13 +1,13 @@
-import { stringInit } from '../../../data';
+import { jsonInit } from '../../../data';
 import { Proxy } from '../../proxy';
 
-interface Metadata {
-  key: string;
+interface Metadata<Key extends string = string> {
+  key: Key;
   options?: KVNamespaceGetOptions<any>;
 }
 
-export class KVGetProxy extends Proxy<Metadata> {
-  static readonly proxyType = 'KVGetProxy';
+export class KVGetWithMetadataProxy extends Proxy<Metadata> {
+  static readonly proxyType = 'KVGetWithMetadataProxy';
   constructor({
     host,
     name,
@@ -17,17 +17,17 @@ export class KVGetProxy extends Proxy<Metadata> {
     name: string;
     metadata: Metadata;
   }) {
-    const proxyType = KVGetProxy.proxyType;
+    const proxyType = KVGetWithMetadataProxy.proxyType;
     super({ proxyType, host, name, metadata, data: null });
   }
   async execute(env: any) {
     const { name, metadata } = this,
       { key, options } = metadata,
       kv = env[name] as KVNamespace,
-      result = await kv.get(key, options);
-    return new Response(result, stringInit);
+      result = await kv.getWithMetadata(key, options);
+    return new Response(JSON.stringify(result), jsonInit);
   }
   receive(response: Response): Promise<any> {
-    return response.text();
+    return response.json();
   }
 }
