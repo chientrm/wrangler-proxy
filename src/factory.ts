@@ -10,6 +10,8 @@ import { KVGetProxy } from './proxies/kv/get/proxy';
 import { KVGetWithMetadataProxy } from './proxies/kv/getWithMetadata/proxy';
 import { KVListProxy } from './proxies/kv/list/proxy';
 import { KVPutProxy } from './proxies/kv/put/proxy';
+import { R2GetProxy } from './proxies/r2/get/proxy';
+import { R2PutProxy } from './proxies/r2/put/proxy';
 
 class ProxyFactory {
   public static getProxy(params: Params, data: Data) {
@@ -40,6 +42,10 @@ class ProxyFactory {
         return new KVDeleteProxy({ name, metadata });
       case KVListProxy.proxyType:
         return new KVListProxy({ name, metadata });
+      case R2PutProxy.proxyType:
+        return new R2PutProxy({ name, metadata, data });
+      case R2GetProxy.proxyType:
+        return new R2GetProxy({ name, metadata });
       default:
         throw new Error('Unknown proxy type.');
     }

@@ -3,6 +3,7 @@ import { ProxyFactory } from './factory';
 import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
 import { FetcherProxyHolder } from './proxies/fetcher/proxy_holder';
 import { KVProxyHolder } from './proxies/kv/proxy_holder';
+import { R2ProxyHolder } from './proxies/r2/proxy_holder';
 
 const defaultHostname = 'http://127.0.0.1:8787',
   createWorker = () =>
@@ -38,21 +39,21 @@ const defaultHostname = 'http://127.0.0.1:8787',
         return new Response(null, { status: 404 });
       },
     },
-  createD1 = (name: string, options?: { hostname: string }): D1Database =>
+  connectD1 = (name: string, options?: { hostname: string }): D1Database =>
     new D1DatabaseProxyHolder({
       host: options?.hostname ?? defaultHostname,
       name,
       metadata: {},
       data: null,
     }),
-  createKV = (name: string, options?: { hostname: string }): KVNamespace =>
+  connectKV = (name: string, options?: { hostname: string }): KVNamespace =>
     new KVProxyHolder({
       host: options?.hostname ?? defaultHostname,
       name,
       metadata: {},
       data: null,
     }),
-  createServiceBinding = (
+  connectServiceBinding = (
     name: string,
     options?: { hostname: string }
   ): Fetcher =>
@@ -71,6 +72,20 @@ const defaultHostname = 'http://127.0.0.1:8787',
     } else {
       return promise;
     }
-  };
+  },
+  connectR2 = (name: string, options?: { hostname: string }): R2Bucket =>
+    new R2ProxyHolder({
+      host: options?.hostname ?? defaultHostname,
+      name,
+      metadata: {},
+      data: null,
+    });
 
-export { createD1, createKV, createServiceBinding, createWorker, waitUntil };
+export {
+  connectD1,
+  connectKV,
+  connectR2,
+  connectServiceBinding,
+  createWorker,
+  waitUntil,
+};

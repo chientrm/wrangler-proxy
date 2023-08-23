@@ -1,9 +1,17 @@
 import {
-  createD1,
-  createKV,
-  createServiceBinding,
+  connectD1,
+  connectKV,
+  connectR2,
+  connectServiceBinding,
   createWorker,
   waitUntil,
 } from './src/worker';
 
-export { createD1, createKV, createServiceBinding, createWorker, waitUntil };
+export {
+  connectD1,
+  connectKV,
+  connectR2,
+  connectServiceBinding,
+  createWorker,
+  waitUntil,
+};

@@ -73,11 +73,11 @@ export {};
 ```ts
 // file: src/hooks.server.ts
 
-import { createD1 } from 'wrangler-proxy';
+import { connectD1 } from 'wrangler-proxy';
 
 export const handle = ({ event, resolve }) => {
-  event.locals.D1 = event.platform?.env?.D1 ?? createD1('D1');
-  // or createD1('D1', { hostname: 'custom-host-name' });
+  event.locals.D1 = event.platform?.env?.D1 ?? connectD1('D1');
+  // or connectD1('D1', { hostname: 'custom-host-name' });
   // default hostname is `http://127.0.0.1:8787`
   return resolve(event);
 };
@@ -101,13 +101,13 @@ export default createWorker();
 ## Roadmap
 
 - ❌ Not started
-- 🟡 Not tested
+- 🟡 Not fully tested
 - ✅ Complete
 
 ### D1Database
 
 ```ts
-import { createD1 } from 'wrangler-proxy';
+import { connectD1 } from 'wrangler-proxy';
 ```
 
 | Function    | Status |
@@ -130,7 +130,7 @@ import { createD1 } from 'wrangler-proxy';
 ### Service Bindings
 
 ```ts
-import { createServiceBinding } from 'wrangler-proxy';
+import { connectServiceBinding } from 'wrangler-proxy';
 ```
 
 | Function    | Status |
@@ -141,7 +141,7 @@ import { createServiceBinding } from 'wrangler-proxy';
 ### KVNamespace
 
 ```ts
-import { createKV } from 'wrangler-proxy';
+import { connectKV } from 'wrangler-proxy';
 ```
 
 | Function            | Status |
@@ -151,6 +151,22 @@ import { createKV } from 'wrangler-proxy';
 | `getWithMetadata()` | 🟡     |
 | `delete()`          | 🟡     |
 | `list()`            | 🟡     |
+
+### R2Bucket
+
+```ts
+import { connectR2 } from 'wrangler-proxy';
+```
+
+| Function                  | Status |
+| ------------------------- | ------ |
+| `head()`                  | ❌     |
+| `get()`                   | 🟡     |
+| `put()`                   | 🟡     |
+| `createMultipartUpload()` | ❌     |
+| `resumeMultipartUpload()` | ❌     |
+| `delete()`                | ❌     |
+| `list()`                  | ❌     |
 
 ### `waitUntil`
 
