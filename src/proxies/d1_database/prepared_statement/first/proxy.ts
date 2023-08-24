@@ -25,7 +25,7 @@ class D1DatabasePreparedStatementFirstProxy extends Proxy<Metadata> {
     const d1 = env[this.name] as D1Database,
       { query, values, colName } = this.metadata!,
       statement1 = d1.prepare(query),
-      statement2 = values ? statement1.bind(values) : statement1,
+      statement2 = values ? statement1.bind(...values) : statement1,
       statement3 = colName ? statement2.first(colName) : statement2.first(),
       result = await statement3;
     return new Response(JSON.stringify(result), jsonInit);
