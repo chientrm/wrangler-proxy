@@ -24,9 +24,10 @@ class D1DatabasePreparedStatementFirstProxy extends Proxy<Metadata> {
   async execute(env: any): Promise<any> {
     const d1 = env[this.name] as D1Database,
       { query, values, colName } = this.metadata!,
-      statement1 = d1.prepare(query).bind(...(values ?? [])),
-      statement2 = colName ? statement1.first(colName) : statement1.first(),
-      result = await statement2;
+      statement1 = d1.prepare(query),
+      statement2 = values ? statement1.bind(values) : statement1,
+      statement3 = colName ? statement2.first(colName) : statement2.first(),
+      result = await statement3;
     return new Response(JSON.stringify(result), jsonInit);
   }
   receive(response: Response): Promise<any> {

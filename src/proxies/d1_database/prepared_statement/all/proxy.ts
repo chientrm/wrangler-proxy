@@ -23,10 +23,9 @@ class D1DatabasePreparedStatementAllProxy extends Proxy<Metadata> {
   async execute(env: any): Promise<any> {
     const d1 = env[this.name] as D1Database,
       { query, values } = this.metadata,
-      result = await d1
-        .prepare(query)
-        .bind(...(values ?? []))
-        .all();
+      statement1 = d1.prepare(query),
+      statement2 = values ? statement1.bind(values) : statement1,
+      result = await statement2.all();
     return new Response(JSON.stringify(result), jsonInit);
   }
   receive(response: Response): Promise<any> {
