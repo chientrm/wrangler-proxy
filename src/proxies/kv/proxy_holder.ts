@@ -72,7 +72,9 @@ export class KVProxyHolder<Key extends string = string>
     options?: KVNamespacePutOptions | undefined
   ): Promise<void> {
     const data =
-      typeof value === 'string' || value instanceof ArrayBuffer
+      typeof value === 'string' ||
+      value instanceof ArrayBuffer ||
+      value instanceof Buffer
         ? new ReadableStream({
             start(controller) {
               controller.enqueue(value);
