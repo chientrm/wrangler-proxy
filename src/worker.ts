@@ -5,6 +5,7 @@ import { KVProxyHolder } from './proxies/kv/proxy_holder';
 import { R2ProxyHolder } from './proxies/r2/proxy_holder';
 
 const defaultHostname = 'http://127.0.0.1:8787',
+  paramsMap: Record<string, any> = {},
   createWorker = () =>
     <ExportedHandler>{
       async fetch(
@@ -12,45 +13,26 @@ const defaultHostname = 'http://127.0.0.1:8787',
         env: any,
         ctx: ExecutionContext
       ): Promise<Response> {
-        if (request.method === 'POST')
+        if (request.method === 'POST') {
           try {
-            const header = request.headers.get('X-Wrangler-Proxy-Length')!,
-              instructionLength = parseInt(header),
-              body = request.body! as ReadableStream<Uint8Array>,
-              instructionChunks: Uint8Array[] = [];
-            let bytesRead = 0,
-              remainingBytes: Uint8Array | undefined = undefined;
-            for await (const value of body) {
-              bytesRead += value.length;
-              if (bytesRead > instructionLength) {
-                const pivot = value.length - (bytesRead - instructionLength),
-                  chunk = value.subarray(0, pivot);
-                remainingBytes = value.subarray(pivot);
-                instructionChunks.push(chunk);
-                break;
-              } else {
-                instructionChunks.push(value);
+            const url = new URL(request.url);
+            const code = request.headers.get('X-Code')!;
+            if (url.pathname === '/instruction') {
+              const values: Uint8Array[] = [];
+              for await (const value of request.body!) {
+                values.push(value);
               }
+              const buffer = await new Blob(values).arrayBuffer(),
+                params = JSON.parse(new TextDecoder().decode(buffer));
+              paramsMap[code] = params;
+              return new Response();
+            } else if (url.pathname === '/data') {
+              const params = paramsMap[code];
+              delete paramsMap[code];
+              const proxy = ProxyFactory.getProxy(params, request.body),
+                response = await proxy.execute(env);
+              return response;
             }
-            if (bytesRead < instructionLength) {
-              return new Response('Invalid request', { status: 500 });
-            }
-            const buffer = await new Blob(instructionChunks).arrayBuffer(),
-              params = JSON.parse(new TextDecoder().decode(buffer)),
-              bodyStream = new ReadableStream<Uint8Array>({
-                async start(controller) {
-                  if (remainingBytes) {
-                    controller.enqueue(remainingBytes);
-                  }
-                  for await (const value of request.body!) {
-                    controller.enqueue(value);
-                  }
-                },
-              });
-            console.log(JSON.stringify(params, null, 2));
-            const proxy = ProxyFactory.getProxy(params, bodyStream),
-              response = await proxy.execute(env);
-            return response;
           } catch (e: any) {
             return new Response(
               JSON.stringify({
@@ -61,6 +43,7 @@ const defaultHostname = 'http://127.0.0.1:8787',
               { status: 500 }
             );
           }
+        }
         return new Response(null, { status: 404 });
       },
     },
@@ -112,5 +95,6 @@ export {
   connectR2,
   connectServiceBinding,
   createWorker,
-  waitUntil,
+  waitUntil
 };
+
