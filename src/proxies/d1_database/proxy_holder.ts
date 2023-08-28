@@ -1,4 +1,5 @@
 import { ProxyHolder } from '../proxy';
+import { D1DatabaseBatchProxy } from './batch/proxy';
 import { D1DatabaseExecProxy } from './exec/proxy';
 import { D1DatabasePreparedStatementProxy } from './prepared_statement/proxy';
 
@@ -16,9 +17,12 @@ class D1DatabaseProxyHolder extends ProxyHolder<{}> implements D1Database {
     throw new Error('Method not implemented.');
   }
   batch<T = unknown>(
-    statements: D1PreparedStatement[]
+    _statements: D1DatabasePreparedStatementProxy[]
   ): Promise<D1Result<T>[]> {
-    throw new Error('Method not implemented.');
+    const { host, name } = this,
+      metadata = _statements.map((statement) => statement.metadata),
+      proxy = new D1DatabaseBatchProxy({ host, name, metadata });
+    return proxy.post();
   }
   async exec(query: string) {
     const { host, name } = this,
