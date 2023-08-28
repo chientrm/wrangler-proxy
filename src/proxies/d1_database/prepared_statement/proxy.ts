@@ -9,6 +9,8 @@ interface Metadata {
   values?: any[];
 }
 
+export type D1DatabasePreparedStatementMetadata = Metadata;
+
 class D1DatabasePreparedStatementProxy
   extends ProxyHolder<Metadata>
   implements D1PreparedStatement
@@ -60,6 +62,15 @@ class D1DatabasePreparedStatementProxy
         metadata: { query },
       });
     return proxy.post();
+  }
+  statement(d1: D1Database) {
+    const { metadata } = this,
+      { query, values } = metadata;
+    if (values) {
+      return d1.prepare(query).bind(...values);
+    } else {
+      return d1.prepare(query);
+    }
   }
 }
 

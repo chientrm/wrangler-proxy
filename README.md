@@ -113,7 +113,7 @@ import { connectD1 } from 'wrangler-proxy';
 | Function    | Status |
 | ----------- | ------ |
 | `prepare()` | ✅     |
-| `batch()`   | ❌     |
+| `batch()`   | ✅     |
 | `dump()`    | ❌     |
 | `exec()`    | ✅     |
 

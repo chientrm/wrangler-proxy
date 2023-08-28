@@ -1,6 +1,18 @@
 import { Data } from '../data';
 import { ProxyHolder } from './proxy_holder';
 
+const checkOk = async (response: Response) => {
+  if (!response.ok) {
+    throw new Error(
+      JSON.stringify({
+        status: response.status,
+        statusText: response.statusText,
+        message: await response.text(),
+      })
+    );
+  }
+};
+
 abstract class Proxy<T> extends ProxyHolder<T> {
   proxyType: string;
   constructor({
@@ -21,29 +33,24 @@ abstract class Proxy<T> extends ProxyHolder<T> {
   }
   async post() {
     const { host, name, proxyType, metadata, data } = this,
-      params = new URLSearchParams({
-        name,
-        proxyType,
-        metadata: JSON.stringify(metadata),
-      }),
-      method = 'POST',
-      response = await fetch(`${host!}?${params}`, {
-        method,
-        body: data,
+      code = Math.floor(Math.random() * 1000000).toString(),
+      response1 = await fetch(`${host!}/instruction`, {
+        method: 'POST',
+        headers: { 'X-Code': code },
+        body: JSON.stringify({ name, proxyType, metadata }),
         // @ts-ignore
         duplex: 'half',
       });
-    if (response.ok) {
-      return this.receive(response);
-    } else {
-      throw new Error(
-        JSON.stringify({
-          status: response.status,
-          statusText: response.statusText,
-          message: await response.text(),
-        })
-      );
-    }
+    await checkOk(response1);
+    const response2 = await fetch(`${host!}/data`, {
+      method: 'POST',
+      headers: { 'X-Code': code },
+      body: data,
+      // @ts-ignore
+      duplex: 'half',
+    });
+    await checkOk(response2);
+    return this.receive(response2);
   }
   abstract execute(env: any): Promise<Response>;
   abstract receive(response: Response): Promise<any>;

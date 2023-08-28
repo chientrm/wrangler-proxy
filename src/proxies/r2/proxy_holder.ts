@@ -1,3 +1,4 @@
+import { R2PutOptionsExtra } from '../../data';
 import { ProxyHolder } from '../proxy';
 import { R2DeleteProxy } from './delete/proxy';
 import { R2GetProxy } from './get/proxy';
@@ -99,14 +100,36 @@ export class R2ProxyHolder extends ProxyHolder<{}> implements R2Bucket {
     if (typeof key !== 'string' || !data) {
       throw new Error('Method not implemented.');
     }
-    const { host, name } = this,
-      proxy = new R2PutProxy({
+    const { host, name } = this;
+    if (!options) {
+      const proxy = new R2PutProxy({
         host,
         name,
-        metadata: { key, options: options as R2PutOptions },
+        metadata: { key },
         data,
       });
-    return proxy.post();
+      return proxy.post();
+    } else {
+      const _options = options as R2PutOptions,
+        newOptions: R2PutOptionsExtra = {
+          ..._options,
+          onlyIfArr:
+            _options.onlyIf instanceof Headers
+              ? [..._options.onlyIf]
+              : undefined,
+          httpMetadataArr:
+            _options.httpMetadata instanceof Headers
+              ? [..._options.httpMetadata]
+              : undefined,
+        },
+        proxy = new R2PutProxy({
+          host,
+          name,
+          metadata: { key, options: newOptions },
+          data,
+        });
+      return proxy.post();
+    }
   }
   createMultipartUpload(
     key: string,
