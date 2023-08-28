@@ -1,4 +1,5 @@
 import { Data, Params } from './data';
+import { D1DatabaseBatchProxy } from './proxies/d1_database/batch/proxy';
 import { D1DatabaseExecProxy } from './proxies/d1_database/exec/proxy';
 import { D1DatabasePreparedStatementAllProxy } from './proxies/d1_database/prepared_statement/all/proxy';
 import { D1DatabasePreparedStatementFirstProxy } from './proxies/d1_database/prepared_statement/first/proxy';
@@ -31,6 +32,8 @@ class ProxyFactory {
         return new D1DatabasePreparedStatementRawProxy({ name, metadata });
       case D1DatabaseExecProxy.proxyType:
         return new D1DatabaseExecProxy({ name, metadata });
+      case D1DatabaseBatchProxy.proxyType:
+        return new D1DatabaseBatchProxy({ name, metadata });
       case FetcherFetchProxy.proxyType:
         return new FetcherFetchProxy({ name, metadata, data });
       case KVPutProxy.proxyType:
