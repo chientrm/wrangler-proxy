@@ -1,4 +1,3 @@
-import { Params } from './data';
 import { ProxyFactory } from './factory';
 import { D1DatabaseProxyHolder } from './proxies/d1_database/proxy_holder';
 import { FetcherProxyHolder } from './proxies/fetcher/proxy_holder';
@@ -15,15 +14,41 @@ const defaultHostname = 'http://127.0.0.1:8787',
       ): Promise<Response> {
         if (request.method === 'POST')
           try {
-            const url = new URL(request.url),
-              searchParams = url.searchParams,
-              params: Params = {
-                name: searchParams.get('name')!,
-                proxyType: searchParams.get('proxyType')!,
-                metadata: JSON.parse(searchParams.get('metadata')!),
-              },
-              data = request.body,
-              proxy = ProxyFactory.getProxy(params, data),
+            const header = request.headers.get('X-Wrangler-Proxy-Length')!,
+              instructionLength = parseInt(header),
+              body = request.body! as ReadableStream<Uint8Array>,
+              instructionChunks: Uint8Array[] = [];
+            let bytesRead = 0,
+              remainingBytes: Uint8Array | undefined = undefined;
+            for await (const value of body) {
+              bytesRead += value.length;
+              if (bytesRead > instructionLength) {
+                const pivot = value.length - (bytesRead - instructionLength),
+                  chunk = value.subarray(0, pivot);
+                remainingBytes = value.subarray(pivot);
+                instructionChunks.push(chunk);
+                break;
+              } else {
+                instructionChunks.push(value);
+              }
+            }
+            if (bytesRead < instructionLength) {
+              return new Response('Invalid request', { status: 500 });
+            }
+            const bodyStream = new ReadableStream({
+                async start(controller) {
+                  if (remainingBytes) {
+                    controller.enqueue(remainingBytes);
+                  }
+                  for await (const value of request.body!) {
+                    controller.enqueue(value);
+                  }
+                },
+              }),
+              buffer = await new Blob(instructionChunks).arrayBuffer(),
+              params = JSON.parse(new TextDecoder().decode(buffer));
+            console.log(JSON.stringify(params, null, 2));
+            const proxy = ProxyFactory.getProxy(params, bodyStream),
               response = await proxy.execute(env);
             return response;
           } catch (e: any) {

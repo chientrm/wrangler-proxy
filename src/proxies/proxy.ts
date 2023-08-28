@@ -21,15 +21,24 @@ abstract class Proxy<T> extends ProxyHolder<T> {
   }
   async post() {
     const { host, name, proxyType, metadata, data } = this,
-      params = new URLSearchParams({
-        name,
-        proxyType,
-        metadata: JSON.stringify(metadata),
-      }),
-      method = 'POST',
-      response = await fetch(`${host!}?${params}`, {
-        method,
-        body: data,
+      instruction = new TextEncoder().encode(
+        JSON.stringify({ name, proxyType, metadata })
+      ),
+      instructionLength = instruction.length.toString(),
+      response = await fetch(host!, {
+        method: 'POST',
+        headers: { 'X-Wrangler-Proxy-Length': instructionLength },
+        body: new ReadableStream({
+          async start(controller) {
+            controller.enqueue(instruction);
+            if (data) {
+              for await (const value of data) {
+                controller.enqueue(value);
+              }
+            }
+            controller.close();
+          },
+        }),
         // @ts-ignore
         duplex: 'half',
       });
