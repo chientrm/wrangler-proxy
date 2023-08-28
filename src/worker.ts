@@ -35,7 +35,9 @@ const defaultHostname = 'http://127.0.0.1:8787',
             if (bytesRead < instructionLength) {
               return new Response('Invalid request', { status: 500 });
             }
-            const bodyStream = new ReadableStream({
+            const buffer = await new Blob(instructionChunks).arrayBuffer(),
+              params = JSON.parse(new TextDecoder().decode(buffer)),
+              bodyStream = new ReadableStream<Uint8Array>({
                 async start(controller) {
                   if (remainingBytes) {
                     controller.enqueue(remainingBytes);
@@ -44,9 +46,7 @@ const defaultHostname = 'http://127.0.0.1:8787',
                     controller.enqueue(value);
                   }
                 },
-              }),
-              buffer = await new Blob(instructionChunks).arrayBuffer(),
-              params = JSON.parse(new TextDecoder().decode(buffer));
+              });
             console.log(JSON.stringify(params, null, 2));
             const proxy = ProxyFactory.getProxy(params, bodyStream),
               response = await proxy.execute(env);
