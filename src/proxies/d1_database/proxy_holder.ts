@@ -17,10 +17,10 @@ class D1DatabaseProxyHolder extends ProxyHolder<{}> implements D1Database {
     throw new Error('Method not implemented.');
   }
   batch<T = unknown>(
-    _statements: D1DatabasePreparedStatementProxy[]
+    statements: D1DatabasePreparedStatementProxy[]
   ): Promise<D1Result<T>[]> {
     const { host, name } = this,
-      metadata = _statements.map((statement) => statement.metadata),
+      metadata = statements.map((statement) => statement.metadata),
       proxy = new D1DatabaseBatchProxy({ host, name, metadata });
     return proxy.post();
   }
