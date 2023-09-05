@@ -95,6 +95,5 @@ export {
   connectR2,
   connectServiceBinding,
   createWorker,
-  waitUntil
+  waitUntil,
 };
-

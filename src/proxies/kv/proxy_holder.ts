@@ -44,14 +44,7 @@ export class KVProxyHolder<Key extends string = string>
     | Promise<ReadableStream<any> | null>
     | Promise<ExpectedValue | null> {
     const { host, name } = this,
-      proxy = new KVGetProxy({
-        host,
-        name,
-        metadata: {
-          key,
-          options: options as KVNamespaceGetOptions<any> | undefined,
-        },
-      });
+      proxy = new KVGetProxy({ host, name, metadata: { key, options } });
     return proxy.post();
   }
   async list<Metadata = unknown>(
@@ -72,10 +65,17 @@ export class KVProxyHolder<Key extends string = string>
     options?: KVNamespacePutOptions | undefined
   ): Promise<void> {
     const data =
-      typeof value === 'string' || value instanceof ArrayBuffer
+      typeof value === 'string' || value instanceof Buffer
         ? new ReadableStream({
             start(controller) {
               controller.enqueue(value);
+              controller.close();
+            },
+          })
+        : value instanceof ArrayBuffer
+        ? new ReadableStream({
+            start(controller) {
+              controller.enqueue(Buffer.from(value));
               controller.close();
             },
           })

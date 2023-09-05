@@ -83,12 +83,17 @@ export class R2ProxyHolder extends ProxyHolder<{}> implements R2Bucket {
     options?: unknown
   ): Promise<R2Object | null> | Promise<R2Object> {
     const data =
-      typeof value === 'string' ||
-      value instanceof ArrayBuffer ||
-      value instanceof Buffer
+      typeof value === 'string' || value instanceof Buffer
         ? new ReadableStream({
             start(controller) {
               controller.enqueue(value);
+              controller.close();
+            },
+          })
+        : value instanceof ArrayBuffer
+        ? new ReadableStream({
+            start(controller) {
+              controller.enqueue(Buffer.from(value));
               controller.close();
             },
           })

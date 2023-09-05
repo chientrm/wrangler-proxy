@@ -6,13 +6,16 @@
   "main": "dist/index.js",
   "scripts": {
     "watch": "node watch.js",
-    "build": "rm -rf dist && node build.js && npx tsc -p tsconfig.json"
+    "build": "rm -rf dist && node build.js && npx tsc -p tsconfig.json",
+    "proxy": "while true; do wrangler dev worker.ts --remote; done",
+    "test": "vitest"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230814.0",
-    "@types/node": "^20.5.2",
+    "@cloudflare/workers-types": "^4.20230904.0",
+    "@types/node": "^20.5.9",
     "esbuild": "^0.19.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.3"
   },
   "repository": {
     "type": "git",
