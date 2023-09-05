@@ -147,9 +147,9 @@ import { connectKV } from 'wrangler-proxy';
 | Function            | Status |
 | ------------------- | ------ |
 | `put()`             | 🟡     |
-| `get()`             | 🟡     |
+| `get()`             | ✅     |
 | `getWithMetadata()` | 🟡     |
-| `delete()`          | 🟡     |
+| `delete()`          | ✅     |
 | `list()`            | 🟡     |
 
 ### R2Bucket
