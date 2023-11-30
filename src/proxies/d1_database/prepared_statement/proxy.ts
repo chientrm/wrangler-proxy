@@ -55,11 +55,11 @@ class D1DatabasePreparedStatementProxy
   }
   async raw<T = unknown>(): Promise<T[]> {
     const { host, metadata, name } = this,
-      { query } = metadata,
+      { query, values } = metadata,
       proxy = new D1DatabasePreparedStatementRawProxy({
         host,
         name,
-        metadata: { query },
+        metadata: { query, values },
       });
     return proxy.post();
   }
