@@ -3,13 +3,7 @@ import { ProxyHolder } from './proxy_holder';
 
 const checkOk = async (response: Response) => {
   if (!response.ok) {
-    throw new Error(
-      JSON.stringify({
-        status: response.status,
-        statusText: response.statusText,
-        message: await response.text(),
-      })
-    );
+    throw new Error(await response.text());
   }
 };
 
