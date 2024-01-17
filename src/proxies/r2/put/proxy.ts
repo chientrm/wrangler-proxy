@@ -1,4 +1,4 @@
-import { Data, R2PutOptionsExtra } from '../../../data';
+import { Data, R2PutOptionsExtra, jsonInit } from '../../../data';
 import { Proxy } from '../../proxy';
 
 interface Metadata {
@@ -27,6 +27,7 @@ export class R2PutProxy extends Proxy<Metadata> {
       { key, options } = metadata,
       r2 = env[name] as R2Bucket,
       value = data!;
+    let result: R2Object | null;
     if (options) {
       const newOptions: R2PutOptions = {
         ...options,
@@ -37,13 +38,14 @@ export class R2PutProxy extends Proxy<Metadata> {
           ? new Headers(options.httpMetadataArr)
           : options.httpMetadata,
       };
-      await r2.put(key, value, newOptions);
+      result = await r2.put(key, value, newOptions);
     } else {
-      await r2.put(key, value);
+      result = await r2.put(key, value);
     }
-    return new Response();
+    return new Response(JSON.stringify(result), jsonInit);
   }
-  receive(response: Response): Promise<any> {
-    return Promise.resolve();
+  async receive(response: Response): Promise<any> {
+    const result = await response.json();
+    return Promise.resolve(result);
   }
 }

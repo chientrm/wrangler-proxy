@@ -7,15 +7,14 @@
   "scripts": {
     "watch": "node watch.js",
     "build": "rm -rf dist && node build.js && npx tsc -p tsconfig.json",
-    "proxy": "while true; do wrangler dev worker.ts --remote; done",
     "test": "vitest"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230904.0",
-    "@types/node": "^20.5.9",
-    "esbuild": "^0.19.2",
-    "typescript": "^5.2.2",
-    "vitest": "^0.34.3"
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "@types/node": "^20.11.4",
+    "esbuild": "^0.19.11",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
   },
   "repository": {
     "type": "git",

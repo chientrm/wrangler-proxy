@@ -1,6 +1,8 @@
 import { Data } from '../data';
 import { ProxyHolder } from './proxy_holder';
 
+type Response = { ok: boolean; text(): Promise<string> };
+
 const checkOk = async (response: Response) => {
   if (!response.ok) {
     throw new Error(await response.text());
