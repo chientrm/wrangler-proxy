@@ -1,7 +1,0 @@
-name = "wrangler-proxy-test"
-compatibility_date = "2023-07-02"
-
-[[kv_namespaces]]
-binding = "KV"
-id = "19ff46ef2a9c43e9be95a72ad03a81fb"
-preview_id = "19ff46ef2a9c43e9be95a72ad03a81fb"
