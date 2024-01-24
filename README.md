@@ -5,6 +5,35 @@
 
 Wrangler Proxy exposes Workers API to outside and integrate to your favorite frameworks. Compatible with DrizzleORM.
 
+## Quick links
+
+- [Get Started](#get-started)
+  - [Install](#install)
+  - [Setup `wrangler.toml`](#example-wranglertoml)
+  - [Setup proxy for dev](#start-proxy-for-dev)
+    - [Remote mode](#remote-mode)
+    - [Local mode](#local-mode)
+  - [Setup SvelteKit project](#example-sveltekit-project)
+- [Using wrangler-proxy to expose workers API](#using-wrangler-proxy-to-expose-workers-api)
+- [Features](#features)
+
+  - [D1](#d1database)
+    - [PreparedStatement](#d1preparedstatement)
+  - [Service Bindings](#service-bindings)
+  - [KV](#kvnamespace)
+  - [R2](#r2bucket)
+  - [waitUntil](#waituntil)
+  - [Queues](#queues-😔)
+  - [Hyperdrive](#hyperdrive-😔)
+  - [Workers AI](#workers-ai-😔)
+  - [AI Gateway](#ai-gateway-😔)
+  - [Stream](#stream-😔)
+  - [Images](#images-😔)
+
+- [Contributing](#contributing)
+  - [Buy Me A Coffee](https://www.buymeacoffee.com/chientrm)
+  - [Donating via PayPal](https://www.paypal.me/chientrm)
+
 ## Get Started
 
 ### Install
@@ -37,13 +66,13 @@ environment = "production"
 
 ### Start proxy for dev
 
-Remote mode
+#### Remote mode
 
 ```
 wrangler dev node_modules/wrangler-proxy/dist/worker.js --remote
 ```
 
-Local mode
+#### Local mode
 
 ```
 wrangler dev node_modules/wrangler-proxy/dist/worker.js
@@ -98,10 +127,10 @@ import { createWorker } from 'wrangler-proxy';
 export default createWorker();
 ```
 
-## Roadmap
+## Features
 
-- ❌ Not started
-- 🟡 Not fully tested
+- 😔 Need funding
+- 🤷 Not fully tested
 - ✅ Complete
 
 ### D1Database
@@ -114,10 +143,10 @@ import { connectD1 } from 'wrangler-proxy';
 | ----------- | ------ |
 | `prepare()` | ✅     |
 | `batch()`   | ✅     |
-| `dump()`    | ❌     |
+| `dump()`    | 😔     |
 | `exec()`    | ✅     |
 
-### D1PreparedStatement
+#### PreparedStatement
 
 | Function  | Status |
 | --------- | ------ |
@@ -136,9 +165,9 @@ import { connectServiceBinding } from 'wrangler-proxy';
 | Function    | Status |
 | ----------- | ------ |
 | `fetch()`   | ✅     |
-| `connect()` | ❌     |
+| `connect()` | 😔     |
 
-### KVNamespace
+### KV
 
 ```ts
 import { connectKV } from 'wrangler-proxy';
@@ -146,13 +175,13 @@ import { connectKV } from 'wrangler-proxy';
 
 | Function            | Status |
 | ------------------- | ------ |
-| `put()`             | 🟡     |
+| `put()`             | 🤷     |
 | `get()`             | ✅     |
-| `getWithMetadata()` | 🟡     |
+| `getWithMetadata()` | 🤷     |
 | `delete()`          | ✅     |
-| `list()`            | 🟡     |
+| `list()`            | 🤷     |
 
-### R2Bucket
+### R2
 
 ```ts
 import { connectR2 } from 'wrangler-proxy';
@@ -160,13 +189,13 @@ import { connectR2 } from 'wrangler-proxy';
 
 | Function                  | Status |
 | ------------------------- | ------ |
-| `head()`                  | ❌     |
+| `head()`                  | 😔     |
 | `get()`                   | ✅     |
 | `put()`                   | ✅     |
-| `createMultipartUpload()` | ❌     |
-| `resumeMultipartUpload()` | ❌     |
+| `createMultipartUpload()` | 😔     |
+| `resumeMultipartUpload()` | 😔     |
 | `delete()`                | ✅     |
-| `list()`                  | ❌     |
+| `list()`                  | 😔     |
 
 ### `waitUntil`
 
@@ -193,8 +222,26 @@ export const actions = {
 };
 ```
 
+### Queues 😔
+
+### Hyperdrive 😔
+
+### Workers AI 😔
+
+### AI Gateway 😔
+
+### Stream 😔
+
+### Images 😔
+
 ## Contributing
+
+If you find this project helpful, consider supporting it by
 
 <a href="https://www.buymeacoffee.com/chientrm" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
-or pull request 😐
+or
+
+[Donating via PayPal](https://www.paypal.me/chientrm)
+
+Your donation will help us implement your requested features faster.
