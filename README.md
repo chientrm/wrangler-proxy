@@ -17,11 +17,11 @@ Wrangler Proxy exposes Workers API to outside and integrate to your favorite fra
 - [Using wrangler-proxy to expose workers API](#using-wrangler-proxy-to-expose-workers-api)
 - [Features](#features)
 
-  - [D1](#d1database)
-    - [PreparedStatement](#d1preparedstatement)
+  - [D1](#d1)
+    - [PreparedStatement](#preparedstatement)
   - [Service Bindings](#service-bindings)
-  - [KV](#kvnamespace)
-  - [R2](#r2bucket)
+  - [KV](#kv)
+  - [R2](#r2)
   - [waitUntil](#waituntil)
   - [Queues](#queues-😔)
   - [Hyperdrive](#hyperdrive-😔)
@@ -133,7 +133,7 @@ export default createWorker();
 - 🤷 Not fully tested
 - ✅ Complete
 
-### D1Database
+### D1
 
 ```ts
 import { connectD1 } from 'wrangler-proxy';
