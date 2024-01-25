@@ -201,6 +201,14 @@ export const handle = async ({ resolve, event }) => {
 };
 ```
 
+```ts
+/// example_usage.ts
+
+event.locals.SB.fetch('http://whatever.fake/send');
+
+// `http://whatever.fake` is required as a dummy hostname
+```
+
 ### KV
 
 ```ts
