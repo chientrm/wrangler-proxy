@@ -206,7 +206,7 @@ export const handle = async ({ resolve, event }) => {
 
 event.locals.SB.fetch('http://whatever.fake/send');
 
-// `http://whatever.fake` is required as a dummy hostname
+// `http://whatever.fake` is required as a dummy hostname. Without a dummy hostname the `fetch` will fail.
 ```
 
 ### KV
