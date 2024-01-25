@@ -193,6 +193,8 @@ declare global {
 ```ts
 /// hooks.server.ts
 
+import { connectServiceBinding } from 'wrangler-proxy';
+
 export const handle = async ({ resolve, event }) => {
   event.locals.SB = event.platform?.env?.SB ?? connectServiceBinding('SB');
   return resolve(event);
