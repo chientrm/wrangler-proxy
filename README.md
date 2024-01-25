@@ -22,6 +22,7 @@ Wrangler Proxy exposes Workers API to outside and integrate to your favorite fra
   - [Service Bindings](#service-bindings)
     - [app.d.ts](#appdts)
     - [hooks.server.ts](#hooksserverts)
+    - [Example Usage](#example-usage)
   - [KV](#kv)
   - [R2](#r2)
   - [waitUntil](#waituntil)
@@ -201,13 +202,13 @@ export const handle = async ({ resolve, event }) => {
 };
 ```
 
+#### Example usage
+
 ```ts
-/// example_usage.ts
-
 event.locals.SB.fetch('http://whatever.fake/send');
-
-// `http://whatever.fake` is required as a dummy hostname. Without a dummy hostname the `fetch` will fail.
 ```
+
+`http://whatever.fake` is required as a dummy hostname. Without a dummy hostname the `fetch` will fail.
 
 ### KV
 
