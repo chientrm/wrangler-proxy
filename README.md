@@ -20,6 +20,9 @@ Wrangler Proxy exposes Workers API to outside and integrate to your favorite fra
   - [D1](#d1)
     - [PreparedStatement](#preparedstatement)
   - [Service Bindings](#service-bindings)
+    - [app.d.ts](#appdts)
+    - [hooks.server.ts](#hooksserverts)
+    - [Example Usage](#example-usage)
   - [KV](#kv)
   - [R2](#r2)
   - [waitUntil](#waituntil)
@@ -166,6 +169,46 @@ import { connectServiceBinding } from 'wrangler-proxy';
 | ----------- | ------ |
 | `fetch()`   | ✅     |
 | `connect()` | 😔     |
+
+#### app.d.ts
+
+```ts
+// app.d.ts
+
+declare global {
+  namespace App {
+    interface Locals {
+      SB: Fetcher;
+    }
+    interface Platform {
+      env?: {
+        SB: Fetcher;
+      };
+    }
+  }
+}
+```
+
+#### hooks.server.ts
+
+```ts
+/// hooks.server.ts
+
+import { connectServiceBinding } from 'wrangler-proxy';
+
+export const handle = async ({ resolve, event }) => {
+  event.locals.SB = event.platform?.env?.SB ?? connectServiceBinding('SB');
+  return resolve(event);
+};
+```
+
+#### Example usage
+
+```ts
+event.locals.SB.fetch('http://whatever.fake/send');
+```
+
+`http://whatever.fake` is required as a dummy hostname. Without a dummy hostname the `fetch` will fail.
 
 ### KV
 
