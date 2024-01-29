@@ -18,7 +18,9 @@ class FetcherProxyHolder extends ProxyHolder<{}> implements Fetcher {
         ? init.body
         : undefined;
     if (!data) {
-      throw new Error('Method not implemented.');
+      throw new Error(
+        `Method not implemented for body type ${typeof init?.body}`
+      );
     }
     const { host, name } = this,
       path = input.toString(),
